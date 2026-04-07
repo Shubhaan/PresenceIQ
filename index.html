@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PresenceIQ | Daily Effectiveness Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <section class="card auth-panel top-auth-panel">
+      <div class="auth-compact-head">
+        <div class="auth-title-block">
+          <p class="section-kicker">Firebase Auth</p>
+          <h3>Student sign-in</h3>
+        </div>
+        <div class="auth-actions">
+          <button class="secondary-button" id="authActionButton" type="button">Continue with Google</button>
+          <button class="ghost-button hidden" id="authSignOutButton" type="button">Sign out</button>
+        </div>
+      </div>
+      <div class="auth-grid">
+        <div class="auth-summary">
+          <div class="auth-avatar" id="authAvatar">P</div>
+          <div>
+            <p class="auth-label" id="authStatusLabel">Auth not configured</p>
+            <h4 id="authStatusTitle">Add your Firebase web config to enable sign-in.</h4>
+            <p class="helper-text auth-inline-text" id="authStatusText">
+              PresenceIQ works without an account, but Firebase Auth can personalize the experience for each student.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <header class="hero">
+      <nav class="topbar">
+        <div class="brand">
+          <span class="brand-mark">P</span>
+          <div>
+            <p class="eyebrow">PresenceIQ</p>
+            <h1>AI-Powered Daily Effectiveness Analyzer</h1>
+          </div>
+        </div>
+        <button class="ghost-button" id="examModeToggle" type="button" aria-pressed="false">Exam Mode: Off</button>
+      </nav>
+
+      <div class="hero-grid">
+        <section class="hero-copy card">
+          <p class="section-kicker">Balance output with recovery</p>
+          <h2>One score that sees study effort, rest, movement, and digital habits together.</h2>
+          <p class="hero-text">
+            PresenceIQ helps students avoid burnout by turning everyday signals into a unified Effectiveness Score,
+            a burnout warning, and small next-step nudges that feel realistic.
+          </p>
+          <div class="hero-metrics">
+            <div>
+              <span>Unified score</span>
+              <strong>0-100 IQ</strong>
+            </div>
+            <div>
+              <span>Burnout predictor</span>
+              <strong>Live risk detection</strong>
+            </div>
+            <div>
+              <span>Digital hygiene</span>
+              <strong>Learning vs passive use</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="score-card card">
+          <p class="section-kicker">Today</p>
+          <div class="score-ring" id="scoreRing">
+            <div>
+              <span>Effectiveness IQ</span>
+              <strong id="scoreValue">0</strong>
+              <small id="scoreLabel">Stable</small>
+            </div>
+          </div>
+          <div class="score-meta">
+            <div>
+              <span>Burnout Risk</span>
+              <strong id="burnoutLabel">Low</strong>
+            </div>
+            <div>
+              <span>Recovery State</span>
+              <strong id="recoveryLabel">Balanced</strong>
+            </div>
+          </div>
+        </section>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="card input-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Daily inputs</p>
+            <h3>Type in your day directly</h3>
+          </div>
+          <button class="secondary-button" id="sampleDataButton" type="button">Load Sample Day</button>
+        </div>
+
+        <form id="metricsForm" class="metrics-grid">
+          <label>
+            Study hours
+            <input type="number" id="studyHours" min="0" max="14" step="0.5" value="6" inputmode="decimal">
+            <span id="studyHoursValue">6 hrs</span>
+          </label>
+
+          <label>
+            Sleep hours
+            <input type="number" id="sleepHours" min="0" max="12" step="0.5" value="7.5" inputmode="decimal">
+            <span id="sleepHoursValue">7.5 hrs</span>
+          </label>
+
+          <label>
+            Steps
+            <input type="number" id="steps" min="0" max="20000" step="250" value="6500" inputmode="numeric">
+            <span id="stepsValue">6500 steps</span>
+          </label>
+
+          <label>
+            Learning screen time
+            <input type="number" id="learningScreenTime" min="0" max="12" step="0.5" value="3" inputmode="decimal">
+            <span id="learningScreenTimeValue">3 hrs</span>
+          </label>
+
+          <label>
+            Passive social media
+            <input type="number" id="socialMediaHours" min="0" max="10" step="0.5" value="2" inputmode="decimal">
+            <span id="socialMediaHoursValue">2 hrs</span>
+          </label>
+
+          <label>
+            Mood check-in
+            <select id="mood">
+              <option value="energized">Energized</option>
+              <option value="steady" selected>Steady</option>
+              <option value="drained">Drained</option>
+            </select>
+          </label>
+        </form>
+      </section>
+
+      <section class="insight-grid">
+        <article class="card">
+          <p class="section-kicker">Component view</p>
+          <h3>Score breakdown</h3>
+          <div class="breakdown-list" id="breakdownList"></div>
+        </article>
+
+        <article class="card">
+          <p class="section-kicker">Digital hygiene</p>
+          <h3>How your screen time is behaving</h3>
+          <div class="hygiene-bars">
+            <div>
+              <div class="bar-label">
+                <span>Learning time</span>
+                <strong id="learningShareLabel">0%</strong>
+              </div>
+              <div class="bar-track"><span id="learningBar"></span></div>
+            </div>
+            <div>
+              <div class="bar-label">
+                <span>Passive time</span>
+                <strong id="passiveShareLabel">0%</strong>
+              </div>
+              <div class="bar-track danger"><span id="passiveBar"></span></div>
+            </div>
+          </div>
+          <p class="helper-text" id="digitalHygieneMessage"></p>
+        </article>
+
+        <article class="card">
+          <div class="ai-panel-header">
+            <div>
+              <p class="section-kicker">Smart nudges</p>
+              <h3>Recommended next move</h3>
+            </div>
+          </div>
+          <p class="helper-text" id="aiStatusText">Suggestions adapt automatically as your score changes.</p>
+          <ul class="nudge-list" id="nudgeList"></ul>
+        </article>
+      </section>
+
+      <section class="card architecture-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Product logic</p>
+            <h3>How PresenceIQ works</h3>
+          </div>
+        </div>
+        <div class="architecture-grid">
+          <div>
+            <h4>Inputs</h4>
+            <p>Study, sleep, steps, learning time, passive social time, and mood all shape the daily score.</p>
+          </div>
+          <div>
+            <h4>Scoring</h4>
+            <p>The app balances productivity and recovery so strong output never hides poor sleep or low movement.</p>
+          </div>
+          <div>
+            <h4>Auth</h4>
+            <p>Firebase Auth can be added for student sign-in without turning the app into a heavier backend product.</p>
+          </div>
+        </div>
+        <pre class="code-block"><code>{
+  "effectivenessScore": "(study * 0.4) + (sleep * 0.3) + (steps * 0.2) - (social * 0.1)",
+  "examMode": "Raises the value of clarity and recovery",
+  "burnoutSignal": "High study load + low sleep or low movement",
+  "digitalHygiene": "Compares learning screen time to passive use",
+  "auth": "Optional Firebase Auth sign-in"
+}</code></pre>
+      </section>
+    </main>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
